@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>✈️ TravelBot AI — IBM Granite Travel Planner</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-icon">✈️</span>
+        <div>
+          <h1 class="brand-name">TravelBot AI</h1>
+          <p class="brand-sub">Powered by IBM Granite</p>
+        </div>
+      </div>
+      <nav class="nav">
+        <button class="nav-btn active" data-tab="chat">💬 Chat</button>
+        <button class="nav-btn" data-tab="planner">🗺️ Planner</button>
+        <button class="nav-btn" data-tab="explore">🌍 Explore</button>
+        <button class="nav-btn" data-tab="weather">🌤️ Weather</button>
+        <button class="nav-btn" data-tab="packing">🎒 Packing</button>
+      </nav>
+      <div class="status-badge" id="statusBadge">
+        <span class="status-dot"></span>
+        <span class="status-text">Connecting...</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO BANNER -->
+  <section class="hero" id="heroSection">
+    <div class="hero-content">
+      <h2 class="hero-title">Plan Your Perfect Journey</h2>
+      <p class="hero-sub">AI-powered travel planning with personalized itineraries, destination insights, and real-time recommendations</p>
+      <div class="quick-actions">
+        <button class="qa-btn" onclick="setQuickPrompt('I want to plan a 7-day budget trip to Japan in April. Help me get started!')">🗾 Japan Trip</button>
+        <button class="qa-btn" onclick="setQuickPrompt('Suggest 5 amazing destinations for a romantic getaway in Europe under $3000 for 2 people')">💑 Romantic Getaway</button>
+        <button class="qa-btn" onclick="setQuickPrompt('Plan a 10-day adventure trip to Southeast Asia for a solo backpacker with $2000 budget')">🏕️ Backpacker Adventure</button>
+        <button class="qa-btn" onclick="setQuickPrompt('What are the best family-friendly destinations for a 2-week vacation in summer with kids?')">👨‍👩‍👧 Family Vacation</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- ============ CHAT TAB ============ -->
+    <section class="tab-content active" id="tab-chat">
+      <div class="chat-layout">
+        <div class="chat-container">
+          <div class="chat-messages" id="chatMessages">
+            <div class="message bot-message">
+              <div class="msg-avatar">🤖</div>
+              <div class="msg-bubble">
+                <p>👋 <strong>Welcome to TravelBot AI!</strong> I'm your personal AI travel planner powered by <strong>IBM Granite</strong>.</p>
+                <p>I can help you:</p>
+                <ul>
+                  <li>🗺️ Plan detailed itineraries for any destination</li>
+                  <li>✈️ Find the best flights and transport options</li>
+                  <li>🏨 Recommend accommodation for your budget</li>
+                  <li>🌤️ Advise on weather and best times to visit</li>
+                  <li>💰 Optimize your travel budget</li>
+                  <li>🎒 Create personalized packing lists</li>
+                </ul>
+                <p>Where would you like to go? Tell me your dream destination! 🌍</p>
+              </div>
+            </div>
+          </div>
+          <div class="chat-input-area">
+            <div class="chat-input-row">
+              <textarea
+                id="chatInput"
+                class="chat-input"
+                placeholder="Ask me anything about travel... (e.g., 'Plan a 5-day trip to Paris for 2 people with $2500 budget')"
+                rows="2"
+              ></textarea>
+              <button class="send-btn" id="sendBtn" onclick="sendChat()">
+                <span class="send-icon">➤</span>
+              </button>
+            </div>
+            <div class="chat-hints">
+              <span onclick="setQuickPrompt('What are the visa requirements for visiting Thailand from India?')">🔍 Visa requirements</span>
+              <span onclick="setQuickPrompt('Best street food destinations in Asia?')">🍜 Street food</span>
+              <span onclick="setQuickPrompt('Top 10 solo travel destinations for 2025?')">🧳 Solo travel</span>
+              <span onclick="setQuickPrompt('How to travel Europe on a tight budget?')">💶 Budget Europe</span>
+            </div>
+          </div>
+        </div>
+        <aside class="chat-sidebar">
+          <div class="sidebar-card">
+            <h3>💡 Travel Tips</h3>
+            <ul class="tip-list" id="travelTipsList">
+              <li>Book flights 6-8 weeks in advance for best prices</li>
+              <li>Travel insurance is always worth it</li>
+              <li>Learn a few local phrases — locals appreciate it</li>
+              <li>Keep digital copies of all documents</li>
+              <li>Notify your bank before traveling internationally</li>
+            </ul>
+          </div>
+          <div class="sidebar-card">
+            <h3>🔥 Trending Destinations</h3>
+            <div class="trending-list">
+              <div class="trending-item" onclick="setQuickPrompt('Tell me about visiting Japan in Spring')">🗾 Japan — Cherry Blossom Season</div>
+              <div class="trending-item" onclick="setQuickPrompt('Plan a trip to Bali Indonesia')">🌴 Bali — Tropical Paradise</div>
+              <div class="trending-item" onclick="setQuickPrompt('Guide to visiting Iceland Northern Lights')">🌌 Iceland — Northern Lights</div>
+              <div class="trending-item" onclick="setQuickPrompt('Morocco travel guide and itinerary')">🕌 Morocco — Desert Magic</div>
+              <div class="trending-item" onclick="setQuickPrompt('New Zealand adventure travel guide')">🥝 New Zealand — Adventure</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ PLANNER TAB ============ -->
+    <section class="tab-content" id="tab-planner">
+      <div class="page-header">
+        <h2>🗺️ AI Itinerary Planner</h2>
+        <p>Generate a personalized day-by-day travel itinerary powered by IBM Granite AI</p>
+      </div>
+      <div class="planner-layout">
+        <div class="planner-form-card">
+          <h3>Trip Details</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>📍 Destination *</label>
+              <input type="text" id="planDestination" placeholder="e.g., Tokyo, Japan" />
+            </div>
+            <div class="form-group">
+              <label>📅 Number of Days *</label>
+              <input type="number" id="planDays" placeholder="7" min="1" max="30" value="7" />
+            </div>
+            <div class="form-group">
+              <label>💰 Total Budget (USD) *</label>
+              <input type="number" id="planBudget" placeholder="2000" min="100" />
+            </div>
+            <div class="form-group">
+              <label>👥 Number of Travelers</label>
+              <input type="number" id="planTravelers" placeholder="2" min="1" max="20" value="2" />
+            </div>
+            <div class="form-group">
+              <label>🗓️ Start Date</label>
+              <input type="date" id="planStartDate" />
+            </div>
+            <div class="form-group">
+              <label>🎯 Travel Style</label>
+              <select id="planStyle">
+                <option value="balanced">⚖️ Balanced</option>
+                <option value="adventure">🏔️ Adventure</option>
+                <option value="cultural">🏛️ Cultural</option>
+                <option value="relaxation">🏖️ Relaxation</option>
+                <option value="budget">💸 Budget</option>
+                <option value="luxury">✨ Luxury</option>
+                <option value="family">👨‍👩‍👧 Family</option>
+                <option value="romantic">💑 Romantic</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group full-width">
+            <label>❤️ Interests & Preferences</label>
+            <div class="checkbox-grid" id="interestCheckboxes">
+              <label class="checkbox-item"><input type="checkbox" value="history & culture" /> 🏛️ History & Culture</label>
+              <label class="checkbox-item"><input type="checkbox" value="food & cuisine" checked /> 🍜 Food & Cuisine</label>
+              <label class="checkbox-item"><input type="checkbox" value="nature & outdoors" /> 🌿 Nature & Outdoors</label>
+              <label class="checkbox-item"><input type="checkbox" value="adventure sports" /> 🧗 Adventure Sports</label>
+              <label class="checkbox-item"><input type="checkbox" value="art & museums" /> 🎨 Art & Museums</label>
+              <label class="checkbox-item"><input type="checkbox" value="shopping" /> 🛍️ Shopping</label>
+              <label class="checkbox-item"><input type="checkbox" value="nightlife" /> 🌙 Nightlife</label>
+              <label class="checkbox-item"><input type="checkbox" value="beaches" /> 🏖️ Beaches</label>
+              <label class="checkbox-item"><input type="checkbox" value="photography" /> 📸 Photography</label>
+              <label class="checkbox-item"><input type="checkbox" value="wellness & spa" /> 🧘 Wellness & Spa</label>
+            </div>
+          </div>
+          <button class="primary-btn" onclick="generateItinerary()" id="genItinBtn">
+            <span>✨ Generate My Itinerary</span>
+          </button>
+        </div>
+        <div class="itinerary-result" id="itineraryResult">
+          <div class="empty-state">
+            <div class="empty-icon">🗺️</div>
+            <h3>Your Itinerary Will Appear Here</h3>
+            <p>Fill in the trip details and click "Generate My Itinerary" to get a personalized travel plan powered by IBM Granite AI</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ EXPLORE TAB ============ -->
+    <section class="tab-content" id="tab-explore">
+      <div class="page-header">
+        <h2>🌍 Explore Destinations</h2>
+        <p>Discover your perfect destination based on your preferences</p>
+      </div>
+      <div class="explore-layout">
+        <div class="explore-form-card">
+          <h3>Find My Perfect Destination</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>💰 Budget (USD)</label>
+              <select id="expBudget">
+                <option value="500">Under $500</option>
+                <option value="1000">$500 - $1,000</option>
+                <option value="2000" selected>$1,000 - $2,000</option>
+                <option value="5000">$2,000 - $5,000</option>
+                <option value="10000">$5,000+</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>📅 Duration</label>
+              <select id="expDuration">
+                <option value="3-5 days">3-5 days (Weekend)</option>
+                <option value="7-10 days" selected>7-10 days (Week)</option>
+                <option value="14-16 days">14-16 days (Two Weeks)</option>
+                <option value="21-30 days">21-30 days (Month)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>✈️ Departing From</label>
+              <input type="text" id="expDepart" placeholder="e.g., New York, London, Mumbai" />
+            </div>
+            <div class="form-group">
+              <label>🗓️ Season</label>
+              <select id="expSeason">
+                <option value="spring">🌸 Spring (Mar-May)</option>
+                <option value="summer">☀️ Summer (Jun-Aug)</option>
+                <option value="autumn">🍂 Autumn (Sep-Nov)</option>
+                <option value="winter">❄️ Winter (Dec-Feb)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>🎭 Travel Style</label>
+              <select id="expStyle">
+                <option value="adventure">🏔️ Adventure</option>
+                <option value="cultural" selected>🏛️ Cultural</option>
+                <option value="relaxation">🏖️ Relaxation</option>
+                <option value="budget">💸 Budget</option>
+                <option value="luxury">✨ Luxury</option>
+                <option value="romantic">💑 Romantic</option>
+                <option value="family">👨‍👩‍👧 Family</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>👥 Travelers</label>
+              <input type="number" id="expTravelers" value="2" min="1" max="20" />
+            </div>
+          </div>
+          <div class="form-group full-width">
+            <label>❤️ What I Love</label>
+            <div class="checkbox-grid">
+              <label class="checkbox-item"><input type="checkbox" class="exp-interest" value="food & cuisine" checked /> 🍜 Food</label>
+              <label class="checkbox-item"><input type="checkbox" class="exp-interest" value="nature" /> 🌿 Nature</label>
+              <label class="checkbox-item"><input type="checkbox" class="exp-interest" value="history" /> 🏛️ History</label>
+              <label class="checkbox-item"><input type="checkbox" class="exp-interest" value="adventure" /> 🧗 Adventure</label>
+              <label class="checkbox-item"><input type="checkbox" class="exp-interest" value="beaches" /> 🏖️ Beaches</label>
+              <label class="checkbox-item"><input type="checkbox" class="exp-interest" value="art" /> 🎨 Art</label>
+              <label class="checkbox-item"><input type="checkbox" class="exp-interest" value="wildlife" /> 🦁 Wildlife</label>
+              <label class="checkbox-item"><input type="checkbox" class="exp-interest" value="photography" /> 📸 Photography</label>
+            </div>
+          </div>
+          <button class="primary-btn" onclick="suggestDestinations()" id="suggestBtn">
+            🔍 Find My Destinations
+          </button>
+          <button class="secondary-btn" onclick="getPopularDestinations()" style="margin-top:10px">
+            🌟 Show Popular Destinations
+          </button>
+        </div>
+        <div class="explore-result" id="exploreResult">
+          <div class="empty-state">
+            <div class="empty-icon">🌍</div>
+            <h3>Discover Amazing Places</h3>
+            <p>Set your preferences and let IBM Granite AI suggest the perfect destinations for your next adventure!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ WEATHER TAB ============ -->
+    <section class="tab-content" id="tab-weather">
+      <div class="page-header">
+        <h2>🌤️ Weather & Travel Timing</h2>
+        <p>Get AI-powered weather insights and best time to visit advice</p>
+      </div>
+      <div class="weather-layout">
+        <div class="weather-form-card">
+          <h3>Weather Travel Advice</h3>
+          <div class="form-group">
+            <label>📍 Destination</label>
+            <input type="text" id="wxDestination" placeholder="e.g., Bali, Maldives, Paris" />
+          </div>
+          <div class="form-group">
+            <label>🗓️ Travel Month</label>
+            <select id="wxMonth">
+              <option value="January">January</option>
+              <option value="February">February</option>
+              <option value="March">March</option>
+              <option value="April">April</option>
+              <option value="May">May</option>
+              <option value="June">June</option>
+              <option value="July">July</option>
+              <option value="August">August</option>
+              <option value="September">September</option>
+              <option value="October">October</option>
+              <option value="November">November</option>
+              <option value="December">December</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>📅 Duration (days)</label>
+            <input type="number" id="wxDuration" value="7" min="1" max="30" />
+          </div>
+          <button class="primary-btn" onclick="getWeatherAdvice()" id="wxBtn">
+            ☀️ Get Weather Advice
+          </button>
+          <div class="divider"></div>
+          <h3>Best Time to Visit</h3>
+          <div class="form-group">
+            <label>📍 Destination</label>
+            <input type="text" id="btDestination" placeholder="e.g., Iceland, Santorini" />
+          </div>
+          <button class="primary-btn" onclick="getBestTime()" id="btBtn">
+            📅 Find Best Time
+          </button>
+        </div>
+        <div class="weather-result" id="weatherResult">
+          <div class="empty-state">
+            <div class="empty-icon">🌤️</div>
+            <h3>Weather Insights Awaiting</h3>
+            <p>Enter a destination to get detailed weather advice and discover the best time to visit for your perfect trip!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PACKING TAB ============ -->
+    <section class="tab-content" id="tab-packing">
+      <div class="page-header">
+        <h2>🎒 AI Packing List Generator</h2>
+        <p>Never forget essentials again — get a personalized packing list for your trip</p>
+      </div>
+      <div class="packing-layout">
+        <div class="packing-form-card">
+          <h3>Generate Packing List</h3>
+          <div class="form-group">
+            <label>📍 Destination</label>
+            <input type="text" id="pkDestination" placeholder="e.g., Thailand, Norway" />
+          </div>
+          <div class="form-group">
+            <label>📅 Duration (days)</label>
+            <input type="number" id="pkDays" value="7" min="1" max="90" />
+          </div>
+          <div class="form-group">
+            <label>🌡️ Season / Weather</label>
+            <select id="pkSeason">
+              <option value="tropical/hot">🌴 Tropical / Hot</option>
+              <option value="moderate/spring">🌸 Moderate / Spring</option>
+              <option value="summer/warm">☀️ Summer / Warm</option>
+              <option value="autumn/cool">🍂 Autumn / Cool</option>
+              <option value="winter/cold">❄️ Winter / Cold</option>
+              <option value="mixed">🌈 Mixed / Variable</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>🎯 Activities Planned</label>
+            <div class="checkbox-grid">
+              <label class="checkbox-item"><input type="checkbox" class="pk-activity" value="beach & swimming" /> 🏖️ Beach</label>
+              <label class="checkbox-item"><input type="checkbox" class="pk-activity" value="hiking & trekking" /> 🥾 Hiking</label>
+              <label class="checkbox-item"><input type="checkbox" class="pk-activity" value="city sightseeing" checked /> 🏙️ City Tour</label>
+              <label class="checkbox-item"><input type="checkbox" class="pk-activity" value="business meetings" /> 💼 Business</label>
+              <label class="checkbox-item"><input type="checkbox" class="pk-activity" value="fine dining" /> 🍽️ Fine Dining</label>
+              <label class="checkbox-item"><input type="checkbox" class="pk-activity" value="water sports" /> 🤿 Water Sports</label>
+              <label class="checkbox-item"><input type="checkbox" class="pk-activity" value="camping" /> ⛺ Camping</label>
+              <label class="checkbox-item"><input type="checkbox" class="pk-activity" value="photography" /> 📸 Photography</label>
+            </div>
+          </div>
+          <button class="primary-btn" onclick="generatePackingList()" id="pkBtn">
+            🎒 Generate Packing List
+          </button>
+        </div>
+        <div class="packing-result" id="packingResult">
+          <div class="empty-state">
+            <div class="empty-icon">🎒</div>
+            <h3>Your Packing List</h3>
+            <p>Enter your trip details and get a comprehensive, AI-curated packing list tailored specifically for your destination and activities!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- LOADING OVERLAY -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-card">
+      <div class="spinner"></div>
+      <p class="loading-text" id="loadingText">IBM Granite AI is thinking...</p>
+      <p class="loading-sub">Crafting your personalized travel plan ✈️</p>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
